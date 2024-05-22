@@ -1,4 +1,10 @@
 from slack_sdk.errors import SlackApiError
+import os
+from slack_bolt import App
+from slack_bolt.adapter.socket_mode import SocketModeHandler
+
+# Variável global para armazenar o ID da thread do menu
+thread_id_menu = None
 
 def build_button_menu():
     # Definindo os botões com um loop para adicionar o estilo 'primary'
@@ -42,6 +48,7 @@ def build_button_menu():
     return sections
 
 def menu_comandos(client, channel_id):
+    global thread_id_menu
     try:
         result = client.chat_postMessage(
             channel=channel_id,
@@ -49,185 +56,77 @@ def menu_comandos(client, channel_id):
             blocks=build_button_menu()
         )
         print(result)
+        
+        # Armazenar o ID da thread do menu
+        if result["ok"]:
+            thread_id_menu = result['ts']
+            print(f"Thread ID of the menu: {thread_id_menu}")
+        else:
+            print("Failed to post menu message to thread.")
     except SlackApiError as e:
         print(f"Error posting message: {e}")
 
 def handle_button_click(ack, body, client, context):
-
+    global thread_id_menu
     ack()
 
-
-
     # Mapeamento de action_id para comandos e mensagens específicas
-
     action_map = {
-
         "button_1": ("!gerente", "Você é uma assistente que ajuda a gerenciar projetos."),
-
         "button_2": ("!mid", "Você é uma assistente que ajuda a gerar prompts para Midjourney."),
-
         "button_3": ("!refs", "Você é uma assistente que ajuda a pesquisar referências."),
-
-        "button_4": ("!brief", """A partir de agora seu nome é NBriefinzinho"""),
-
+        "button_4": ("!brief", "A partir de agora seu nome é NBriefinzinho."),
         "button_5": ("!pauta", "Você é uma assistente que ajuda a organizar pautas."),
-
         "button_6": ("!tr", "Você é uma assistente que ajuda a traduzir textos.")
-
     }
 
-
     action_id = body["actions"][0]["action_id"]
-
     command, specific_message = action_map.get(action_id, (None, None))
 
     if not command:
-
         return
 
-
-
     user_id = body["user"]["id"]
-
     channel_id = body["channel"]["id"]
 
-    message_ts = body["message"]["ts"]  # Obtém o timestamp da mensagem do menu
-
-
-
-    # Enviar a mensagem específica dentro da thread
-
-    response = client.chat_postMessage(
-
-        channel=channel_id,
-
-        text=specific_message,
-
-        thread_ts=message_ts  # Envia a mensagem dentro da thread
-
-    )
-
-
-
-    # Obter o timestamp da mensagem enviada
-
-    specific_message_ts = response['ts']
-
-
-
-    # Editar a mensagem específica
-
-    client.chat_update(
-
-        channel=channel_id,
-
-        ts=specific_message_ts,
-
-        text="Olá Editado"
-
-    )
-
-
-
-    formatted_command = format_openai_message_content(command, translate_markdown=True)
-
-    messages = [{"role": "user", "content": formatted_command}]
-
-    openai_api_key = context["OPENAI_API_KEY"]
-
-    model = context["OPENAI_MODEL"]
-
-
-
-    wip_message = client.chat_postMessage(
-
-        channel=channel_id,
-
-        text="Aguarde... :hourglass_flowing_sand:",
-
-        thread_ts=message_ts  # Envia a mensagem de "Aguarde" dentro da thread
-
-    )
-
-
-
-    stream = start_receiving_openai_response(
-
-        openai_api_key=openai_api_key,
-
-        model=model,
-
-        messages=messages,
-
-        user=user_id
-
-    )
-
-
-
-    consume_openai_stream_to_write_reply(
-
-        client=client,
-
-        wip_reply=wip_message,
-
-        context=context,
-
-        user_id=user_id,
-
-        messages=messages,
-
-        stream=stream,
-
-        timeout_seconds=120,
-
-        translate_markdown=True
-
-    )
-
-def consume_openai_stream_to_write_reply(
-    *,
-    client,
-    wip_reply,
-    context,
-    user_id,
-    messages,
-    stream,
-    timeout_seconds,
-    translate_markdown
-):
-    start_time = time.time()
-    assistant_reply = {"role": "assistant", "content": ""}
-    messages.append(assistant_reply)
-    word_count = 0
-    loading_character = " ... :writing_hand:"
-
+    # Enviar a mensagem específica dentro da thread do menu
     try:
-        for chunk in stream:
-            if time.time() - start_time >= timeout_seconds:
-                raise Timeout()
-            item = chunk.choices[0]
-            if item.get("finish_reason") is not None:
-                break
-            delta = item.get("delta")
-            if delta.get("content") is not None:
-                word_count += 1
-                assistant_reply["content"] += delta.get("content")
-                if word_count >= 20:
-                    update_reply(client, wip_reply, assistant_reply["content"], loading_character, translate_markdown)
-                    word_count = 0
+        response = client.chat_postMessage(
+            channel=channel_id,
+            text=specific_message,
+            thread_ts=thread_id_menu  # Usar a thread do menu armazenada
+        )
+        print(response)
+        
+        # Imprimir o ID da thread no terminal
+        if response["ok"]:
+            print(f"Thread ID: {response['thread_ts']}")
+        else:
+            print("Failed to post message to thread.")
+    except SlackApiError as e:
+        print(f"Error posting message: {e}")
 
-        update_reply(client, wip_reply, assistant_reply["content"], "", translate_markdown)
-    finally:
-        try:
-            stream.close()
-        except Exception:
-            pass
+# Inicializar a aplicação
+if __name__ == "__main__":
+    app_token = os.getenv("SLACK_APP_TOKEN")
+    bot_token = os.getenv("SLACK_BOT_TOKEN")
+    
+    if not app_token or not bot_token:
+        print("Missing SLACK_APP_TOKEN or SLACK_BOT_TOKEN environment variables.")
+    else:
+        app = App(token=bot_token)
 
-def update_reply(client, wip_reply, content, loading_character, translate_markdown):
-    assistant_reply_text = format_assistant_reply(content, translate_markdown)
-    client.chat_update(
-        channel=wip_reply["channel"],
-        ts=wip_reply["ts"],
-        text=assistant_reply_text + loading_character
-    )
+        # Configuração de eventos e comandos
+        app.command("/menu")(lambda ack, body, client: ack() or menu_comandos(client, body['channel_id']))
+        
+        # Configuração para lidar com cliques de botões
+        app.action("button_1")(lambda ack, body, client, context: handle_button_click(ack, body, client, context))
+        app.action("button_2")(lambda ack, body, client, context: handle_button_click(ack, body, client, context))
+        app.action("button_3")(lambda ack, body, client, context: handle_button_click(ack, body, client, context))
+        app.action("button_4")(lambda ack, body, client, context: handle_button_click(ack, body, client, context))
+        app.action("button_5")(lambda ack, body, client, context: handle_button_click(ack, body, client, context))
+        app.action("button_6")(lambda ack, body, client, context: handle_button_click(ack, body, client, context))
+
+        # Inicializar a aplicação
+        handler = SocketModeHandler(app, app_token)
+        handler.start()
