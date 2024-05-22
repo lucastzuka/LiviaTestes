@@ -61,7 +61,8 @@ def ask_chatgpt(text, user_id, channel_id, thread_ts=None, ts=None):
     
     registro_uso(user_id, user_name, channel_name, current_time, text)
     
-    system_prompt, please_wait_message = load_channel_settings(channel_name)
+    # Passe tanto channel_name quanto channel_id
+    system_prompt, please_wait_message = load_channel_settings(channel_name, channel_id)
     bot_user_id = app.client.auth_test()["user_id"]
     conversation_history = construct_conversation_history(messages, bot_user_id, user_id, text, thread_ts, ts)
     status_message_ts = post_message_to_slack(channel_id, please_wait_message, thread_ts)
@@ -130,16 +131,20 @@ def determine_channel_and_user_names(channel_id, user_id):
 
     return user_name, channel_name
 
-def load_channel_settings(channel_name):
-    channel_settings = channel_config.get(channel_name, {})
-    system_prompt = channel_settings.get(
-        "system_prompt",
-        channel_config.get("system_prompt", "Você é a ℓiⱴia, uma assistente de inteligência artificial, jovem, alternativa e muito bem humorada")
-    )
-    please_wait_message = channel_settings.get(
-        "please_wait_message",
-        channel_config.get("please_wait_message", ":hourglass_flowing_sand: Aguarde...")
-    )
+def load_channel_settings(channel_name, channel_id):
+    if channel_id == 'C059NNLU3E1':  # ID do canal 'testes'
+        system_prompt = "A partir de agora seu nome é Briefinzinho"
+        please_wait_message = ":hourglass_flowing_sand: Aguarde..."
+    else:
+        channel_settings = channel_config.get(channel_name, {})
+        system_prompt = channel_settings.get(
+            "system_prompt",
+            channel_config.get("system_prompt", "Você é a ℓiⱴia, uma assistente de inteligência artificial, jovem, alternativa e muito bem humorada")
+        )
+        please_wait_message = channel_settings.get(
+            "please_wait_message",
+            channel_config.get("please_wait_message", ":hourglass_flowing_sand: Aguarde...")
+        )
     return system_prompt, please_wait_message
 
 def construct_conversation_history(messages, bot_user_id, user_id, current_text, thread_ts=None, ts=None):
