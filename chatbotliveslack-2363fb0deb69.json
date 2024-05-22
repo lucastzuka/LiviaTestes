@@ -1,0 +1,14 @@
+{
+    "type": "service_account",
+    "project_id": "chatbotliveslack",
+    "private_key_id": "2363fb0deb6936cad429f854b844751cb4de906d",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDhPSJo2+3i+Kty\nSUSQjnfuEq3Ms5xshsKSUFgodoRZLFkZL/0RzaeirRPjKsyyP9lf7KCuwvuPUEWA\naUDAXxRPzqzGcQBMu/Q5UKTrV1pQQ36Gd3XaB0FqgjMWEO2A03YcEDehcqKm8Qzu\nTAZ5zcFeejlxXAtQBFT7yWSHhqeqLFNjuEZtVHs8fHc4CrwEyS55Y6DXlOlx6Ipk\nZE8aqpda4UZyr1pVP0CTecs4zZCvUr+In4Xddt2VGJgJx6lyM0OJHe+Agb3LYCLq\n2YzGYz0SG/XyhpC8TbearK/SKe1gBg5sBu4hbLNFWDo/58ORXZGQp/RgPgYhTlYg\nlmHi09gdAgMBAAECggEARqy8I1L/Lf0BLvc2gHVzxEwwJM8nAha27tovD2NA3ApC\nWtjn+7IgK7dLSjifyj6moqbJNI0SCkIRzN056CLtaK1dIVdL1MgVNfbMCNx8Bjtn\ndCH/5M3qBNWd2gqtu4KeyOd9zTb/Oorgl9VbItUhG9gWNi+/jPgPAoKK/MuPyKFR\nBUMN/wui5l9PvGcDHuJyvju8l6OBZXO1I6JXI2v8ElrIdvNpc/0Lhjhr4ZzTzKDi\nOvBgQySzMkxyw+SGEMNYmvqpRFmltjWEoEQW54U0+vVCxSXsSzvjxmwTKvf0Hwm/\nPDWlBKYHEbRRDg8dgosuytUzF+jAyim2Q1+2ktkesQKBgQD+ltb5QaqhgGIxFftW\neGQGggqvOvu4qFkXx/pv7vOp8OJxpfK9UT/ajQ3zHN+gFLtuL91Jc+1hNySd6Cjt\nowgPf3KSKNn+mfqrx0MAETiojEwwvOaRHuelfMnSB8A8Cml8cpBtToa2O18gutDU\nD8mVJ+uCw1Nf2Xxm/JW+TtaOUwKBgQDifKh+ZHXKLGoSAB1x7If+LdfJyGreHU2V\n3+Su8k+bhUw6gsqmlXhCR+dC/spEvZbIwlfVF4+uX9mFtGCDrGTMyD80ha4YVENR\n61wZiPJBQxtwOljSiQerm7jRpwTeHQU2bO2mMR+0iieslkRay52hNT9VNy+O49lM\nccJFO6fRzwKBgF8UvpzApZVDeWiTqRaWR+UWVB81jCVe2kdDbIi5WU8yo5+GNq31\n1j8tRvRw6CPFGmsAfUidfx47lfVTa1W0+aGwG33yu9eWckQNWzx/MgXgv+PD6Ohx\n/lmTzVwfgO/rg5Hyx3XLSgxtCA4VN0C71LFcA10GzfCSLR/ZXaOBlif5AoGBAJea\n9Dquyn4LnvDvrMYem6WUUDbc9lQ57z5cwbotrwYegzlDZZ1+viI3+WDKJuE+u1kl\nZh/ZBq+lr3illllto4fEnzJsLW5RsUJ7tonNNsRixFIqbFx5p23C7kNAdqyrZlrZ\nLXcquNtkA0yuxZC1bY2ElCFZsHcIo+Nc3rrzRNHXAoGAPv3Qjzi8NRTJHrLaaPle\nRfrY5nWYeKK7l00j0vetG7AQBpw+XxNM7g2PFMa7SICw8WiHxTCAg4om76As3UBC\njQWtd4+vvL7lekATXJTpBfQIlEuvJvLO46EM7x/6SkdM+BjAYeFR9ze5nyek4/uv\nAxVN9pqshiefaZIVXQkhtuY=\n-----END PRIVATE KEY-----\n",
+    "client_email": "caixinha-refreshliv@chatbotliveslack.iam.gserviceaccount.com",
+    "client_id": "102478408552791043271",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/caixinha-refreshliv%40chatbotliveslack.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+  }
+  
