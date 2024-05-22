@@ -58,11 +58,19 @@ def ask_chatgpt(text, user_id, channel_id, thread_ts=None, ts=None):
     user_name, channel_name = determine_channel_and_user_names(channel_id, user_id)
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     print(f"ID do Usuario: {user_id}, Usuario: {user_name}, Canal: {channel_name}, Data e Hora: {current_time}")
-    
+    print(f"Thread TS recebido: {thread_ts}")
+
     registro_uso(user_id, user_name, channel_name, current_time, text)
     
-    # Passe tanto channel_name quanto channel_id
-    system_prompt, please_wait_message = load_channel_settings(channel_name, channel_id)
+    specific_thread_ts = '1716414309.004929'  # Substitua pelo timestamp específico da thread
+    if thread_ts == specific_thread_ts:
+        system_prompt = "A partir de agora seu nome é Briefinzinho"
+        please_wait_message = ":hourglass_flowing_sand: Aguarde..."
+        print("Aplicando prompt específico para a thread")
+    else:
+        system_prompt, please_wait_message = load_channel_settings(channel_name, channel_id)
+        print("Aplicando prompt padrão")
+
     bot_user_id = app.client.auth_test()["user_id"]
     conversation_history = construct_conversation_history(messages, bot_user_id, user_id, text, thread_ts, ts)
     status_message_ts = post_message_to_slack(channel_id, please_wait_message, thread_ts)
@@ -79,6 +87,7 @@ def ask_chatgpt(text, user_id, channel_id, thread_ts=None, ts=None):
                 delete_message_from_slack(channel_id, status_message_ts)
     
     threading.Thread(target=worker).start()
+
 
 def registro_uso(user_id, user_name, channel_name, current_time, user_message):
     fieldnames = ['user_id', 'user_name', 'channel_name', 'timestamp', 'user_message']
