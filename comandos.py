@@ -5,8 +5,6 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 # Variável global para armazenar o ID da thread do menu
 thread_id_menu = None
-# Variável global para armazenar o ID da nova thread do briefing
-new_thread_ts_briefing = None
 
 def build_button_menu():
     # Definindo o botão "Briefing" com estilo 'primary'
@@ -60,7 +58,6 @@ def menu_comandos(client, channel_id):
         print(f"Error posting message: {e}")
 
 def handle_button_click(ack, body, client, context):
-    global new_thread_ts_briefing
     ack()
 
     # Mapeamento de action_id para comando e mensagem específica
@@ -85,10 +82,10 @@ def handle_button_click(ack, body, client, context):
         )
         print(response)
         
-        # Armazenar o ID da nova thread no terminal
+        # Imprimir o ID da nova thread no terminal
         if response["ok"]:
-            new_thread_ts_briefing = response['ts']
-            print(f"New Thread ID: {new_thread_ts_briefing}")
+            new_thread_ts = response['ts']
+            print(f"New Thread ID: {new_thread_ts}")
         else:
             print("Failed to post new thread message.")
     except SlackApiError as e:
@@ -105,7 +102,7 @@ if __name__ == "__main__":
         app = App(token=bot_token)
 
         # Configuração de eventos e comandos
-        app.command("/teste_menu")(lambda ack, body, client: ack() or menu_comandos(client, body['channel_id']))
+        app.command("/menu")(lambda ack, body, client: ack() or menu_comandos(client, body['channel_id']))
         
         # Configuração para lidar com cliques de botão
         app.action("button_1")(lambda ack, body, client, context: handle_button_click(ack, body, client, context))
