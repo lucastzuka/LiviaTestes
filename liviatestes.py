@@ -62,7 +62,7 @@ def ask_chatgpt(text, user_id, channel_id, thread_ts=None, ts=None):
 
     registro_uso(user_id, user_name, channel_name, current_time, text)
     
-    specific_thread_ts = '1716414309.004929'  # Substitua pelo timestamp específico da thread
+    specific_thread_ts = ' '  # Substitua pelo timestamp específico da thread
     if thread_ts == specific_thread_ts:
         system_prompt = "A partir de agora seu nome é Briefinzinho"
         please_wait_message = ":hourglass_flowing_sand: Aguarde..."
@@ -142,7 +142,7 @@ def determine_channel_and_user_names(channel_id, user_id):
 
 def load_channel_settings(channel_name, channel_id):
     if channel_id == 'C059NNLU3E1':  # ID do canal 'testes'
-        system_prompt = "A partir de agora seu nome é Briefinzinho"
+        system_prompt = """### Você é uma especialista no atendimento a clientes de uma agência de publicidade, com vasta experiência em operações de agências e diz 'HELLOOO BABY'"""
         please_wait_message = ":hourglass_flowing_sand: Aguarde..."
     else:
         channel_settings = channel_config.get(channel_name, {})
@@ -318,7 +318,7 @@ def app_home_opened(ack, event, logger):
     )
     logger.info(response)
 
-@app.command("/menu")
+@app.command("/teste_menu")
 def handle_menu_command(ack, body, client):
     ack()
     channel_id = body["channel_id"]

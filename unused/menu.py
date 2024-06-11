@@ -1,6 +1,6 @@
-import time
-from slack_sdk import WebClient
-from slack_sdk.errors import SlackApiError
+#import time
+#from slack_sdk import WebClient
+#from slack_sdk.errors import SlackApiError
 
 # Função para construir o menu de botões
 def build_button_menu():
