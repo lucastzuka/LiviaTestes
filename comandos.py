@@ -54,7 +54,8 @@ def handle_button_click(ack, body, client, context):
 
     action_id = body["actions"][0]["action_id"]
     if action_id == "button_1":
-        specific_message = "A partir de agora seu nome é NBriefinzinho."
+        specific_message = """Use esta thread para interagir com a <@U057233T98A> e criar seu briefing :smiling_face_with_3_hearts::blossom:"""
+
         user_id = body["user"]["id"]
         channel_id = body["channel"]["id"]
 
