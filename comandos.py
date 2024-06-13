@@ -67,7 +67,7 @@ def handle_button_click(ack, body, client, context):
             if response["ok"]:
                 new_thread_ts_briefing = response['ts']
                 test_set_thread_ts(new_thread_ts_briefing)
-                time.sleep(1)  # Adiciona uma pausa para garantir a atualização da variável
+                time.sleep(1)  
             else:
                 print("Failed to post new thread message.")
         except SlackApiError as e:
