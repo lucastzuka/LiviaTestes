@@ -210,6 +210,28 @@ def delete_message_from_slack(channel_id, ts):
     except Exception as e:
         print(f"Failed to delete message from Slack: {e}")
 
+def ask_chatgpt_with_image(text, image_url, user_id, channel_id, thread_ts=None, ts=None):
+    global client
+    messages = [
+        {"role": "user", "content": [
+            {"type": "text", "text": text},
+            {"type": "image_url", "image_url": {"url": image_url}}
+        ]}
+    ]
+    print(f"Mensagens enviadas para a API: {messages}")
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=messages,
+            max_tokens=1024
+        )
+        answer = response.choices[0].message.content
+        print("Resposta do GPT-4o:", answer)
+        post_message_to_slack(channel_id, answer, thread_ts)
+    except Exception as e:
+        print(f"Erro ao chamar o GPT-4o: {e}")
+        post_message_to_slack(channel_id, "Houve um erro ao processar sua imagem.", thread_ts)
+
 @app.event("message")
 def handle_message_events(body, logger):
     logger.info(body)
@@ -246,6 +268,7 @@ def handle_message_events(body, logger):
                 logger.info("Ignored event: not a direct message or thread reply")
     else:
         logger.info("Ignored event: not a user message or has subtype")
+
 
 @app.event("app_mention")
 def handle_app_mention_events(body, logger):
