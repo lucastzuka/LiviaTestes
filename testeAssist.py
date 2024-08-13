@@ -3,8 +3,6 @@ from openai import OpenAI
 import openai  
 import time  # usada para esperar entre as verificações
 
-OPENAI_API_KEY = "sk-proj-RFEYhMvLfqgFlpZ87UvXT3BlbkFJNRqzyFEOGxLexRil2tBV" 
-ASSISTANT_ID = "asst_zloVW1yPnQYcYEhCF5qf7kFl"  # ID do Assistant que será usado
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
