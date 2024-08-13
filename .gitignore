@@ -1,0 +1,9 @@
+# Ignore arquivos compilados
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore arquivos de configuração do ambiente
+.env
+
+livia_testes/
